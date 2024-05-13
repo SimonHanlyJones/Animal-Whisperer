@@ -3,24 +3,19 @@ import {
   View,
   Platform,
   KeyboardAvoidingView,
-  StyleSheet,
   Text,
-  PermissionsAndroid,
   TouchableOpacity,
   Image,
 } from "react-native";
-import { InputToolbar, GiftedChat, Bubble } from "react-native-gifted-chat";
-import axios from "axios";
+import { GiftedChat } from "react-native-gifted-chat";
+
 // import UserModal from "../components/UserModal";
-// import ConvModal from "../components/ConvModal";
+
 import AnimatedMessage from "../components/AnimatedMessage";
 import TypingIndicator from "../components/TypingIndicator";
 
-// import { GoogleSignin } from "@react-native-google-signin/google-signin";
-
 import { MaterialIcons } from "@expo/vector-icons";
 
-// import KeepAwake from 'react-native-keep-awake';
 import { styles } from "../styles/styles";
 
 import { LogBox } from "react-native";
@@ -33,9 +28,6 @@ import {
 
 LogBox.ignoreLogs(["new NativeEventEmitter"]);
 
-// import Voice from '@react-native-voice/voice';
-// import Voice from "@react-native-community/voice";
-// import Tts from "react-native-tts";
 import { useChatContext } from "../contexts/ChatContext";
 
 import ConvoStarters from "../components/ConvoStarters";
@@ -74,11 +66,11 @@ export default function ChatScreen() {
 
   const insets = useSafeAreaInsets();
 
-  const handleSignIn = (user: string) => {
-    setFirebaseUser(user);
-    setModalUserVisible(false); // Optionally close the modal after sign-in
-    // You can now use the ID token to authenticate API requests
-  };
+  // const handleSignIn = (user: string) => {
+  //   setFirebaseUser(user);
+  //   setModalUserVisible(false); // Optionally close the modal after sign-in
+  //   // You can now use the ID token to authenticate API requests
+  // };
 
   const handleSignOut = () => {
     setFirebaseUser("");
@@ -90,172 +82,18 @@ export default function ChatScreen() {
     setModalUserVisible(!firebaseUser);
   }, [firebaseUser]);
 
-  // tts config
-
-  // function configureTTS(preferredVoice = "default") {
-  //   Tts.getInitStatus()
-  //     .then(() => {
-  //       Tts.setDefaultLanguage("en-AU");
-
-  //       if (preferredVoice !== "default") {
-  //         Tts.setDefaultVoice(preferredVoice);
-  //       }
-
-  //       Tts.setDefaultRate(0.5);
-  //       // Tts.setDefaultPitch(1.1);
-
-  //       // Add any additional configuration as needed
-  //     })
-  //     .catch((error) => {
-  //       // Handle TTS initialization errors
-  //       console.error(error);
-  //     });
-  // }
-  // configureTTS("en-au-x-aub-network");
-
-  // Chat bot stuff
-
-  // const handleTTSend = () => {
-  //   setIsSpeaking(false);
-  //   if (isConversationRef.current) {
-  //     startListening();
-  //   }
-  // };
-
-  // Tts.addEventListener("tts-finish", handleTTSend);
-
   // useEffect(() => {
-  //   const handleTextRecognized = (
-  //     recognizedText: string,
-  //     firebaseUser: string
-  //   ) => {
-  //     console.log(recognizedText);
-  //     onSend(
-  //       [
-  //         {
-  //           _id: Math.random().toString(),
-  //           text: recognizedText,
-  //           createdAt: new Date(),
-  //           user: {
-  //             _id: 1, // User ID
-  //           },
-  //         },
-  //       ],
-  //       firebaseUser
-  //     );
-  //   };
-  //   const onSpeechResults = (e: any) => {
-  //     console.log("Speech results.");
-  //     if (e.value && e.value.length > 0) {
-  //       const recognizedText = e.value[0];
-  //       handleTextRecognized(recognizedText, firebaseUser);
-  //     }
-  //     setIsListening(false);
-  //   };
+  //   console.log("Message History:", messageHistoryAI);
+  // }, [messageHistoryAI]);
 
-  //   const onSpeechError = (error) => {
-  //     console.log("Speech recognition error:", error);
-  //     if (error && error.error.message === "7/No match") {
-  //       // Handle the timeout
-  //       setIsListening(false);
-  //       setIsConversation(false);
-  //     }
-  //   };
-
-  //   // Set event handlers
-  //   Voice.onSpeechResults = onSpeechResults;
-  //   Voice.onSpeechError = onSpeechError;
-
-  //   return () => {
-  //     // Cleanup
-  //     Voice.destroy().then(Voice.removeAllListeners);
-  //     // speechDetectedRef.current = false;
-  //   };
-  // }, [firebaseUser]);
-
-  // const requestMicrophonePermission = async () => {
-  //   try {
-  //     const granted = await PermissionsAndroid.request(
-  //       PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-  //       {
-  //         title: "Microphone Permission",
-  //         message:
-  //           "This app needs access to your microphone for speech recognition.",
-  //         buttonNeutral: "Ask Me Later",
-  //         buttonNegative: "Cancel",
-  //         buttonPositive: "OK",
-  //       }
-  //     );
-  //     return granted === PermissionsAndroid.RESULTS.GRANTED;
-  //   } catch (err) {
-  //     console.warn(err);
-  //     return false;
-  //   }
-  // };
-
-  // // useEffect for stopping the conversation
-
-  // const startConversation = () => {
-  //   console.log("startConversation called");
-
-  // const stopConversation = () => {
-  //   setIsConversation(false);
-  // };
-
-  // const startListening = async () => {
-  //   const hasPermission = await requestMicrophonePermission();
-  //   if (hasPermission) {
-  //     try {
-  //       setIsListening(true);
-  //       await Voice.start("en-AU");
-  //     } catch (e) {
-  //       console.error(e);
-  //     }
-  //   } else {
-  //     console.log("Microphone permission is required to use this feature.");
-  //   }
-  // };
-
-  // const stopListening = async () => {
-  //   try {
-  //     await Voice.stop();
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // };
-
-  useEffect(() => {
-    console.log("Message History:", messageHistoryAI);
-  }, [messageHistoryAI]);
-
-  const isConversationRef = useRef(isConversation);
-
-  // Sync the ref with the state
-  // useEffect(() => {
-  //   isConversationRef.current = isConversation;
-  //   if (isConversation) {
-  //     console.log("isConversation", isConversation);
-  //     startListening(); // This will be called when isConversation becomes true
-  //     //   KeepAwake.activate();
-  //   }
-  //   if (!isConversation) {
-  //     console.log(
-  //       "stopConversation called, conversation value",
-  //       isConversation
-  //     );
-  //     stopListening(); // This will be called when isConversation becomes false
-  //     Tts.stop();
-  //     setIsSpeaking(false);
-  //     //   KeepAwake.deactivate();
-  //   }
-  // }, [isConversation]);
+  // const isConversationRef = useRef(isConversation);
 
   return (
     <View
       style={{
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
-        ...styles.safeArea,
+        ...styles.safeAreaInner,
       }}
     >
       <View style={styles.header}>
@@ -298,24 +136,17 @@ export default function ChatScreen() {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={40}
         />
-      </View>
+        {/* <Text>{isSpeaking ? "Parent Speaking: Yes" : "Parent Speaking: No"}</Text> */}
+        {/* <Text>{isListening ? "Parent Listening: Yes" : "Parent Listening: No"}</Text> */}
 
-      {/* <ConvModal
-        isVisible={isConversation}
-        onClose={stopConversation}
-        isSpeaking={isSpeaking}
-        isListening={isListening}
-      /> */}
-      {/* <Text>{isSpeaking ? "Parent Speaking: Yes" : "Parent Speaking: No"}</Text> */}
-      {/* <Text>{isListening ? "Parent Listening: Yes" : "Parent Listening: No"}</Text> */}
-
-      {/* <UserModal
+        {/* <UserModal
         isVisible={modalUserVisible}
         onClose={() => setModalUserVisible(false)}
         onSignIn={handleSignIn}
         onSignOut={handleSignOut}
         onReset={resetMessages}
       /> */}
+      </View>
     </View>
   );
 }

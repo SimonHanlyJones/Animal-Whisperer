@@ -40,6 +40,7 @@ function SpeechRecognition(props: VoiceRecognitionProps) {
     } else {
       props.setIsListening(false);
     }
+    props.onError(error);
   };
 
   const onSpeechPartialResults = (e: any) => {
@@ -78,7 +79,7 @@ function SpeechRecognition(props: VoiceRecognitionProps) {
   };
 
   async function stopListening() {
-    await Voice.stop();
+    Voice.stop();
     props.setIsListening(false);
   }
 

@@ -5,6 +5,8 @@ import { styles } from "../../styles/styles";
 
 import SpeechRecognition from "./SpeechRecognition";
 import VoiceSynthesis from "./VoiceSynthesis";
+import ConvModal from "./ConvModal";
+// import * as Haptics from "expo-haptics";
 
 import React from "react";
 
@@ -37,6 +39,9 @@ function ConversationParent() {
     lastMessageRef,
   } = useChatContext();
 
+  const [conversationModalVisible, setConversationModalVisible] =
+    useState(false);
+
   // TODO: implement check on permissions
 
   useEffect(() => {
@@ -47,6 +52,7 @@ function ConversationParent() {
     }
     if (isConversation) {
       setIsListening(true);
+      setConversationModalVisible(true);
     }
   }, [isConversation]);
 
@@ -55,13 +61,17 @@ function ConversationParent() {
   }, [isSpeaking]);
 
   useEffect(() => {
+    // Only trigger haptics if the state changes to true
+    // if (isListening !== isListeningRef.current && isListening) {
+    //   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    // }
     isListeningRef.current = isListening;
-    console.log("is Listening:", isListening);
-    // ReactNativeHapticFeedback.trigger('impactLight', {
-    //   enableVibrateFallback: true,
-    //   ignoreAndroidSystemSettings: false,
-    // });
   }, [isListening]);
+
+  const handleCloseConversationModal = () => {
+    setConversationModalVisible(false);
+    setIsConversation(false);
+  };
 
   const handleVoiceResult = useCallback(
     (text: string) => {
@@ -76,6 +86,8 @@ function ConversationParent() {
             },
           },
         ]);
+        setIsSpeaking(true);
+        isSpeakingRef.current = true;
       }
       console.log("Voice recognition result:", text);
     },
@@ -86,7 +98,7 @@ function ConversationParent() {
 
   const handlePartialResult = (text: string) => {
     setPartialText(text); // Update state with partial result
-    console.log("Partial voice recognition result:", text); // Log partial result
+    // console.log("Partial voice recognition result:", text); // Log partial result
   };
 
   const handleVoiceError = (error: any) => {
@@ -120,6 +132,16 @@ function ConversationParent() {
         setIsSpeaking={setIsSpeaking}
         isSpeakingRef={isSpeakingRef}
         lastMessageRef={lastMessageRef}
+      />
+      <ConvModal
+        isVisible={conversationModalVisible}
+        onClose={handleCloseConversationModal}
+        isSpeaking={isSpeaking}
+        isListening={isListening}
+        waitingForResponse={waitingForResponse}
+        setIsConversation={setIsConversation}
+        isConversation={isConversation}
+        isConversationRef={isConversationRef}
       />
     </View>
   );

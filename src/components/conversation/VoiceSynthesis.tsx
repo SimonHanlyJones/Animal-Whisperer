@@ -4,6 +4,8 @@ import * as Speech from "expo-speech";
 import { IMessage } from "react-native-gifted-chat";
 import { useEffect } from "react";
 
+import { useChatContext } from "../../contexts/ChatContext";
+
 interface VoiceSynthesisProps {
   isConversation: boolean;
   isConverationRef: React.MutableRefObject<boolean>;
@@ -14,6 +16,33 @@ interface VoiceSynthesisProps {
   lastMessageRef: React.MutableRefObject<IMessage | undefined>;
 }
 export default function VoiceSynthesis(props: VoiceSynthesisProps) {
+  const {
+    messages,
+    setMessages,
+    addMessage,
+    showConvoStarter,
+    setShowConvoStarter,
+    waitingForResponse,
+    setWaitingForResponse,
+    modalUserVisible,
+    setModalUserVisible,
+    firebaseUser,
+    setFirebaseUser,
+    isSpeaking,
+    setIsSpeaking,
+    isListening,
+    setIsListening,
+    isConversation,
+    setIsConversation,
+    isConversationRef,
+    firebaseUserRef,
+    isSpeakingRef,
+    isListeningRef,
+    onSend,
+    messageHistoryAI,
+    setMessageHistoryAI,
+    lastMessageRef,
+  } = useChatContext();
   const [availableVoice, setAvailableVoice] = React.useState<
     string | undefined
   >(undefined);
@@ -39,34 +68,24 @@ export default function VoiceSynthesis(props: VoiceSynthesisProps) {
     }
   }
   useEffect(() => {
-    if (!props.isSpeakingRef.current) {
+    if (!isConversationRef.current) {
       Speech.stop();
     }
-  }, [props.isSpeakingRef.current]);
+  }, [isConversationRef.current]);
 
   useEffect(() => {
-    if (!props.lastMessageRef.current) return;
-    console.log(
-      "HERE",
-      props.isConversation,
-      props.waitingForResponse,
-      props.isSpeakingRef.current,
-      props.lastMessageRef.current
-    );
+    if (messageHistoryAI.length <= 1) return;
 
     // Condition to start speaking
     if (
       props.isConversation &&
+      !isListeningRef.current &&
       !props.waitingForResponse &&
-      props.lastMessageRef.current &&
-      props.lastMessageRef.current.user._id === 2 &&
-      !props.isSpeakingRef.current
+      messageHistoryAI[messageHistoryAI.length - 1].role === "assistant" &&
+      isSpeakingRef.current
     ) {
-      props.setIsSpeaking(true);
-      props.isSpeakingRef.current = true;
-
       // Start speaking
-      Speech.speak(lastMessage.text, {
+      Speech.speak(messageHistoryAI[messageHistoryAI.length - 1].content, {
         language: "en-AU",
         voice: availableVoice,
         onDone: handleSpeechDone,
@@ -75,21 +94,20 @@ export default function VoiceSynthesis(props: VoiceSynthesisProps) {
     }
   }, [
     props.isConversation,
+    isListeningRef,
     props.waitingForResponse,
-    props.messages,
+    messageHistoryAI,
     props.setIsSpeaking,
+    availableVoice,
   ]);
-  async function speak(message: string) {
-    Speech.speak(message, {
-      language: "en-AU",
-      voice: "en-au-x-aub-network",
-    });
-  }
 
   const handleSpeechDone = () => {
     // Set isSpeaking to false when speech is done or if an error occurs
     props.setIsSpeaking(false);
     props.isSpeakingRef.current = false;
+    if (isConversationRef.current) {
+      setIsListening(true);
+    }
   };
 
   useEffect(() => {
@@ -101,18 +119,5 @@ export default function VoiceSynthesis(props: VoiceSynthesisProps) {
     };
   }, []);
 
-  return (
-    <View>
-      {/* <Button title="Press to hear some words" onPress={speakTest} /> */}
-    </View>
-  );
+  return <View></View>;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#ecf0f1",
-    padding: 8,
-  },
-});

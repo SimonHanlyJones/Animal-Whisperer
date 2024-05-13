@@ -26,6 +26,10 @@ export const styles = StyleSheet.create({
     flex: 1,
     // backgroundColor: "black",
   },
+  safeAreaInner: {
+    flex: 1,
+    // backgroundColor: "black",
+  },
   userButton: {
     backgroundColor: buttonColour1,
     padding: 5,

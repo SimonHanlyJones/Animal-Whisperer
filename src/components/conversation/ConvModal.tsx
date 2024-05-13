@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, { useEffect, useRef } from "react";
 import {
   Modal,
   View,
@@ -8,15 +8,24 @@ import {
   Animated,
   TouchableOpacity,
   TouchableWithoutFeedback,
-} from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+} from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 
-const ConvModal = ({isVisible, onClose, isSpeaking, isListening}) => {
+const ConvModal = ({
+  isVisible,
+  onClose,
+  isSpeaking,
+  isListening,
+  waitingForResponse,
+  setIsConversation,
+  isConversation,
+  isConversationRef,
+}) => {
   const rotation = useRef(new Animated.Value(0)).current; // Animated.Value for rotation
 
   useEffect(() => {
     // Start and stop the animation based on isSpeaking
-    if (isSpeaking) {
+    if (isSpeaking && !waitingForResponse) {
       startSpeakingAnimation();
     } else {
       Animated.timing(rotation, {
@@ -26,7 +35,7 @@ const ConvModal = ({isVisible, onClose, isSpeaking, isListening}) => {
         useNativeDriver: true,
       }).start();
     }
-  }, [isSpeaking]);
+  }, [isSpeaking, waitingForResponse]);
 
   const startSpeakingAnimation = () => {
     // Animation function for speaking
@@ -47,19 +56,26 @@ const ConvModal = ({isVisible, onClose, isSpeaking, isListening}) => {
           duration: 500,
           useNativeDriver: true,
         }),
-      ]),
+      ])
     ).start();
   };
 
   const rotationInterpolate = rotation.interpolate({
     // Interpolate rotation values
     inputRange: [-1, 1],
-    outputRange: ['-10deg', '10deg'], // Adjust the degree range as needed
+    outputRange: ["-10deg", "10deg"], // Adjust the degree range as needed
   });
 
   const animatedStyle = {
     // Animated style for the image
-    transform: [{rotate: rotationInterpolate}],
+    transform: [{ rotate: rotationInterpolate }],
+  };
+
+  const handleStartChatting = () => {
+    setIsConversation(true);
+    if (isConversationRef.current !== null) {
+      isConversationRef.current = true; // Assuming you have ensured it's not null
+    }
   };
 
   return (
@@ -73,7 +89,7 @@ const ConvModal = ({isVisible, onClose, isSpeaking, isListening}) => {
               </TouchableOpacity>
               {/* Image is always rendered, but animation and additional text only apply when listening or speaking */}
               <Animated.Image
-                source={require('../images/animan512.png')}
+                source={require("../../images/animan512.png")}
                 style={[
                   styles.listeningImage,
                   isSpeaking ? animatedStyle : null,
@@ -83,11 +99,14 @@ const ConvModal = ({isVisible, onClose, isSpeaking, isListening}) => {
               {isListening && (
                 <Text style={styles.listeningText}>I'm all ears mate</Text>
               )}
-              {!isListening && !isSpeaking && (
+              {!isListening && waitingForResponse && (
                 <Text style={styles.listeningText}>Thinking</Text>
               )}
               {!isListening && isSpeaking && (
                 <Text style={styles.listeningText}> </Text>
+              )}
+              {!isConversation && (
+                <Button title="Start Chatting" onPress={handleStartChatting} />
               )}
             </View>
           </TouchableWithoutFeedback>
@@ -100,22 +119,22 @@ const ConvModal = ({isVisible, onClose, isSpeaking, isListening}) => {
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1, // Takes up the entire space of the modal
-    justifyContent: 'center', // Centers the child vertically
-    alignItems: 'center', // Centers the child horizontally
+    justifyContent: "center", // Centers the child vertically
+    alignItems: "center", // Centers the child horizontally
     // marginTop: 22,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
   },
   convModalView: {
     // Define your modal view styles here
     width: 400, // Fixed width
     height: 400, // Fixed height
     margin: 20,
-    backgroundColor: '#262930',
+    backgroundColor: "#262930",
     borderRadius: 20,
     padding: 35,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -132,10 +151,10 @@ const styles = StyleSheet.create({
   listeningText: {
     fontSize: 18,
     marginBottom: 20,
-    color: '#dcd9ae',
+    color: "#dcd9ae",
   },
   closeButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     left: 10,
   },
