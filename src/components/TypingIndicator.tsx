@@ -1,5 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Animated, StyleSheet } from 'react-native';
+import React, { useEffect, useRef } from "react";
+import { View, Animated, StyleSheet } from "react-native";
+import { styles } from "../styles/styles";
+import { useChatContext } from "../contexts/ChatContext";
 
 const TypingIndicator = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial opacity
@@ -26,29 +28,12 @@ const TypingIndicator = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Animated.View style={[styles.dot, { opacity: fadeAnim }]} />
-      <Animated.View style={[styles.dot, { opacity: fadeAnim }]} />
-      <Animated.View style={[styles.dot, { opacity: fadeAnim }]} />
+    <View style={styles.thinkingContainer}>
+      <Animated.View style={[styles.thinkingDot, { opacity: fadeAnim }]} />
+      <Animated.View style={[styles.thinkingDot, { opacity: fadeAnim }]} />
+      <Animated.View style={[styles.thinkingDot, { opacity: fadeAnim }]} />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    height: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16, 
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#000',
-    marginHorizontal: 3,
-  },
-});
 
 export default TypingIndicator;

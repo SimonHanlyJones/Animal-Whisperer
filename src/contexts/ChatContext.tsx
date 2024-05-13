@@ -12,6 +12,7 @@ import { IMessage, GiftedChat } from "react-native-gifted-chat";
 import { animalChat } from "../firebaseServices";
 import { AIMessage } from "../interfaces/chatInterfaces";
 import { createSignature } from "../utilities/utilities";
+import { Keyboard } from "react-native";
 
 interface ChatContextType {
   messages: any[];
@@ -40,6 +41,7 @@ interface ChatContextType {
   setMessageHistoryAI: (value: any[]) => void;
   resetMessages: () => void;
   lastMessageRef: React.MutableRefObject<IMessage | undefined>;
+  keyboardOffset: number;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -55,6 +57,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isConversation, setIsConversation] = useState(false);
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
 
   const firebaseUserRef = useRef(firebaseUser);
   const isSpeakingRef = useRef(isSpeaking);
@@ -68,6 +71,20 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({
         "You are a helpful animal expert named The Animal Whisperer. Your job is to help the user with all of their animal care questions. Do so in a funny, overenthusiastic, Australian manner like a famous Australian Crocodile Hunter.",
     },
   ];
+
+  useEffect(() => {
+    const showSub = Keyboard.addListener("keyboardDidShow", (e) => {
+      setKeyboardOffset(100); // Adjust according to your footer height
+    });
+    const hideSub = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardOffset(0);
+    });
+
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
 
   useEffect(() => {
     lastMessageRef.current =
@@ -196,6 +213,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({
         setMessageHistoryAI,
         resetMessages,
         lastMessageRef,
+        keyboardOffset,
       }}
     >
       {children}

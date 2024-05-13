@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 const headerColour = "#B89842";
 const backgroundColour = "#aeab8a";
 const titleColour = "#ffffff";
@@ -10,9 +10,27 @@ const buttonColour1 = "#B89842";
 const buttonColour2 = "#262930";
 const textParchment = "#dcd9ae";
 const textDark = "#602D0D";
+export const inputHeight = 10;
+const basicTextSize = 16;
 
 export const styles = StyleSheet.create({
-  spacer: {},
+  thinkingContainer: {
+    flexDirection: "row",
+
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 14,
+  },
+  thinkingDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#000",
+    marginHorizontal: 3,
+  },
+  spacer: {
+    padding: 100,
+  },
   iconStyle: {
     justifyContent: "center", // Centers children along the main axis (for 'column' direction, which is default)
     alignItems: "center",
@@ -35,15 +53,19 @@ export const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 30,
   },
+
   inputToolbar: {
     backgroundColor: footerColour,
     paddingHorizontal: 10,
-    paddingVertical: 4,
+    // height: 20,
+    paddingVertical: inputHeight,
+    // position: "relative",
+    // bottom: 50,
   },
   textInput: {
     backgroundColor: userBubblesColour,
     borderRadius: 20,
-    fontSize: 15,
+    fontSize: basicTextSize,
     color: textParchment,
     paddingVertical: 10,
     paddingHorizontal: 15,
@@ -72,6 +94,7 @@ export const styles = StyleSheet.create({
   },
   userBubbleText: {
     color: textParchment, // White for the text inside the bubbles for readability
+    fontSize: basicTextSize,
   },
   botBubble: {
     backgroundColor: botBubblesColour, // Tan for the user's chat bubbles, maintaining the focus on Tan and Olive
@@ -80,6 +103,7 @@ export const styles = StyleSheet.create({
   },
   botBubbleText: {
     color: textDark, // White for the text inside the bubbles for readability
+    fontSize: basicTextSize,
   },
   sendButton: {
     marginRight: 10,
@@ -110,19 +134,20 @@ export const styles = StyleSheet.create({
     right: 10,
   },
   conversationStarterButton: {
-    // marginRight: 10,
+    marginLeft: 10,
+    marginRight: 10,
     marginBottom: 15,
-    // paddingHorizontal: 15,
+    paddingHorizontal: 10,
     // paddingVertical: 5,
-    borderRadius: 10,
+    borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
-    height: 70,
+    height: 80,
     backgroundColor: buttonColour2,
   },
   conversationStarterButtonText: {
     color: textParchment,
-    fontSize: 17,
+    fontSize: 16,
     // fontWeight: 'bold',
   },
 });

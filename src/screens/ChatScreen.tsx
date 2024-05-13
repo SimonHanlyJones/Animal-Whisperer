@@ -50,18 +50,8 @@ export default function ChatScreen() {
     setModalUserVisible,
     firebaseUser,
     setFirebaseUser,
-    isSpeaking,
-    setIsSpeaking,
-    isListening,
-    setIsListening,
-    isConversation,
-    setIsConversation,
-    firebaseUserRef,
-    isSpeakingRef,
-    isListeningRef,
+
     onSend,
-    messageHistoryAI,
-    setMessageHistoryAI,
   } = useChatContext();
 
   const insets = useSafeAreaInsets();
@@ -119,9 +109,9 @@ export default function ChatScreen() {
           }}
           user={{ _id: 1 }} // Your User ID
           textInputStyle={styles.textInput}
-          // isTyping={waitingForResponse}
+          isTyping={waitingForResponse}
           renderFooter={renderFooter}
-          // bottomOffset={30}
+          bottomOffset={100}
           renderInputToolbar={customInputToolbar}
           renderAvatar={() => null}
           renderBubble={renderBubble}
@@ -132,10 +122,10 @@ export default function ChatScreen() {
           // contentContainerStyle={{ paddingBottom: 600 }}
         />
         <ConvoStarters />
-        <KeyboardAvoidingView
+        {/* <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={40}
-        />
+          keyboardVerticalOffset={50}
+        /> */}
         {/* <Text>{isSpeaking ? "Parent Speaking: Yes" : "Parent Speaking: No"}</Text> */}
         {/* <Text>{isListening ? "Parent Listening: Yes" : "Parent Listening: No"}</Text> */}
 

@@ -17,31 +17,11 @@ interface VoiceSynthesisProps {
 }
 export default function VoiceSynthesis(props: VoiceSynthesisProps) {
   const {
-    messages,
-    setMessages,
-    addMessage,
-    showConvoStarter,
-    setShowConvoStarter,
-    waitingForResponse,
-    setWaitingForResponse,
-    modalUserVisible,
-    setModalUserVisible,
-    firebaseUser,
-    setFirebaseUser,
-    isSpeaking,
-    setIsSpeaking,
-    isListening,
     setIsListening,
-    isConversation,
-    setIsConversation,
     isConversationRef,
-    firebaseUserRef,
     isSpeakingRef,
     isListeningRef,
-    onSend,
     messageHistoryAI,
-    setMessageHistoryAI,
-    lastMessageRef,
   } = useChatContext();
   const [availableVoice, setAvailableVoice] = React.useState<
     string | undefined
@@ -85,9 +65,10 @@ export default function VoiceSynthesis(props: VoiceSynthesisProps) {
       isSpeakingRef.current
     ) {
       // Start speaking
+      // TODO: ADD MISSING VOICE HANDLES
       Speech.speak(messageHistoryAI[messageHistoryAI.length - 1].content, {
         language: "en-AU",
-        voice: availableVoice,
+        voice: "en-au-x-aub-network",
         onDone: handleSpeechDone,
         onError: handleSpeechDone, // handle errors similarly to 'onDone'
       });

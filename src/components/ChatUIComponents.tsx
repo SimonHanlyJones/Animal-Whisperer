@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import {
   InputToolbar,
@@ -10,7 +10,7 @@ import {
 } from "react-native-gifted-chat";
 import { MaterialIcons } from "@expo/vector-icons";
 import TypingIndicator from "./TypingIndicator"; // Ensure correct path
-import { styles } from "../styles/styles"; // Ensure correct path
+import { styles, inputHeight } from "../styles/styles"; // Ensure correct path
 import { useChatContext } from "../contexts/ChatContext";
 export const customInputToolbar = (props: InputToolbarProps<IMessage>) => {
   return (
@@ -39,18 +39,24 @@ export const renderBubble = (props: BubbleProps<IMessage>) => {
 };
 
 export const renderFooter = () => {
-  const { waitingForResponse } = useChatContext();
+  const { keyboardOffset, waitingForResponse } = useChatContext();
+
   if (waitingForResponse) {
-    return <TypingIndicator />;
+    return (
+      <View>
+        <TypingIndicator />
+        <View style={{ height: keyboardOffset + inputHeight + 10 }} />
+      </View>
+    );
   }
-  return null;
+  // console.log(keyboardOffset);
+  return <View style={{ height: keyboardOffset + inputHeight + 10 }} />;
 };
 
 // make input bar look good with send/ start and stop convo
 
 export const renderSend = (props: SendProps<IMessage>) => {
-  const { isConversation, setIsConversation, isConversationRef } =
-    useChatContext();
+  const { isConversation, setIsConversation } = useChatContext();
   if (props.text && props.text.trim().length > 0) {
     return (
       <TouchableOpacity
