@@ -42,6 +42,8 @@ interface ChatContextType {
   resetMessages: () => void;
   lastMessageRef: React.MutableRefObject<IMessage | undefined>;
   keyboardOffset: number;
+  micLevel: number;
+  setMicLevel: (value: number) => void;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -64,6 +66,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({
   const isListeningRef = useRef(isListening);
   const isConversationRef = useRef(isConversation);
   const lastMessageRef = useRef<IMessage | undefined>(undefined);
+  const [micLevel, setMicLevel] = useState(-5);
   const aiMessageStart: AIMessage[] = [
     {
       role: "system",
@@ -133,12 +136,14 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({
       // Set waitingForResponse just before making the API call.
       setWaitingForResponse(true);
 
-      const response = await animalChat({
-        messages: updatedMessageHistoryAI,
-        signature: signature,
-        timestamp: timestamp,
-      });
-      const botResponse: string = response.data;
+      // const response = await animalChat({
+      //   messages: updatedMessageHistoryAI,
+      //   signature: signature,
+      //   timestamp: timestamp,
+      // });
+      // const botResponse: string = response.data;
+
+      const botResponse = "Demo Response from Chatbot";
 
       console.log("botResponse:", botResponse);
 
@@ -171,7 +176,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({
         //     Tts.speak(botResponse);
         //   });
         // }
-      }, 20);
+      }, 2000);
     } catch (error) {
       console.error("Error sending message to the chatbot:", error);
       setWaitingForResponse(false); // Ensure waiting indicator is turned off in case of an error
@@ -214,6 +219,8 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({
         resetMessages,
         lastMessageRef,
         keyboardOffset,
+        micLevel,
+        setMicLevel,
       }}
     >
       {children}

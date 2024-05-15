@@ -150,4 +150,45 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     // fontWeight: 'bold',
   },
+  centeredView: {
+    flex: 1, // Takes up the entire space of the modal
+    justifyContent: "center", // Centers the child vertically
+    alignItems: "center", // Centers the child horizontally
+    // marginTop: 22,
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+  },
+  convModalView: {
+    // Define your modal view styles here
+    width: 400, // Fixed width
+    height: 600, // Fixed height
+    margin: 20,
+    backgroundColor: "#262930",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  listeningImage: {
+    width: 300, // Adjust based on your needs
+    height: 300, // Adjust based on your needs
+    marginBottom: 10,
+  },
+  listeningText: {
+    fontSize: 18,
+    marginBottom: 20,
+    color: "#dcd9ae",
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+  },
 });

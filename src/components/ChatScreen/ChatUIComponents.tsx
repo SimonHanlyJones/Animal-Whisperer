@@ -10,8 +10,8 @@ import {
 } from "react-native-gifted-chat";
 import { MaterialIcons } from "@expo/vector-icons";
 import TypingIndicator from "./TypingIndicator"; // Ensure correct path
-import { styles, inputHeight } from "../styles/styles"; // Ensure correct path
-import { useChatContext } from "../contexts/ChatContext";
+import { styles, inputHeight } from "../../styles/styles"; // Ensure correct path
+import { useChatContext } from "../../contexts/ChatContext";
 export const customInputToolbar = (props: InputToolbarProps<IMessage>) => {
   return (
     <>

@@ -10,17 +10,39 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { styles } from "../../../styles/styles";
+import { useChatContext } from "../../../contexts/ChatContext";
+const ConvModal = ({ isVisible, onClose }) => {
+  const {
+    messages,
+    setMessages,
+    addMessage,
+    showConvoStarter,
+    setShowConvoStarter,
+    waitingForResponse,
+    setWaitingForResponse,
+    modalUserVisible,
+    setModalUserVisible,
+    firebaseUser,
+    setFirebaseUser,
+    isSpeaking,
+    setIsSpeaking,
+    isListening,
+    setIsListening,
+    isConversation,
+    setIsConversation,
+    isConversationRef,
+    firebaseUserRef,
+    isSpeakingRef,
+    isListeningRef,
+    onSend,
+    messageHistoryAI,
+    setMessageHistoryAI,
+    lastMessageRef,
+    micLevel,
+    setMicLevel,
+  } = useChatContext();
 
-const ConvModal = ({
-  isVisible,
-  onClose,
-  isSpeaking,
-  isListening,
-  waitingForResponse,
-  setIsConversation,
-  isConversation,
-  isConversationRef,
-}) => {
   const rotation = useRef(new Animated.Value(0)).current; // Animated.Value for rotation
 
   useEffect(() => {
@@ -73,9 +95,10 @@ const ConvModal = ({
 
   const handleStartChatting = () => {
     setIsConversation(true);
-    if (isConversationRef.current !== null) {
-      isConversationRef.current = true; // Assuming you have ensured it's not null
-    }
+
+    isConversationRef.current = true; // Assuming you have ensured it's not null
+    setIsSpeaking(false);
+    isSpeakingRef.current = false;
   };
 
   return (
@@ -89,25 +112,33 @@ const ConvModal = ({
               </TouchableOpacity>
               {/* Image is always rendered, but animation and additional text only apply when listening or speaking */}
               <Animated.Image
-                source={require("../../images/animan512.png")}
+                source={require("../../../images/animan512.png")}
                 style={[
                   styles.listeningImage,
                   isSpeaking ? animatedStyle : null,
                 ]} // Apply rotation when speaking
               />
 
-              {isListening && (
-                <Text style={styles.listeningText}>I'm all ears mate</Text>
-              )}
-              {!isListening && waitingForResponse && (
-                <Text style={styles.listeningText}>Thinking</Text>
-              )}
-              {!isListening && isSpeaking && (
-                <Text style={styles.listeningText}> </Text>
-              )}
-              {!isConversation && (
-                <Button title="Start Chatting" onPress={handleStartChatting} />
-              )}
+              <Text style={styles.listeningText}>
+                {isListening
+                  ? "I'm all ears mate"
+                  : waitingForResponse
+                  ? "Thinking"
+                  : !isConversation
+                  ? "Press the phone to start chatting mate"
+                  : ""}
+              </Text>
+              <TouchableOpacity
+                style={styles.conversationButton}
+                onPress={() => setIsConversation(!isConversation)}
+              >
+                <MaterialIcons
+                  name={!isConversation ? "phone" : "stop"}
+                  size={24}
+                  color="#FFF"
+                  style={styles.iconStyle}
+                />
+              </TouchableOpacity>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -116,47 +147,11 @@ const ConvModal = ({
   );
 };
 
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1, // Takes up the entire space of the modal
-    justifyContent: "center", // Centers the child vertically
-    alignItems: "center", // Centers the child horizontally
-    // marginTop: 22,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-  },
-  convModalView: {
-    // Define your modal view styles here
-    width: 400, // Fixed width
-    height: 400, // Fixed height
-    margin: 20,
-    backgroundColor: "#262930",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  listeningImage: {
-    width: 300, // Adjust based on your needs
-    height: 300, // Adjust based on your needs
-    marginBottom: 10,
-  },
-  listeningText: {
-    fontSize: 18,
-    marginBottom: 20,
-    color: "#dcd9ae",
-  },
-  closeButton: {
-    position: "absolute",
-    top: 10,
-    left: 10,
+const localStyles = StyleSheet.create({
+  textContainer: {
+    height: 30, // Adjust the height as needed to fit your text
+    justifyContent: "center", // Center the text vertically
+    alignItems: "center", // Center the text horizontally
   },
 });
 

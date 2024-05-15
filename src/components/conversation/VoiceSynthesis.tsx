@@ -50,20 +50,27 @@ export default function VoiceSynthesis(props: VoiceSynthesisProps) {
   useEffect(() => {
     if (!isConversationRef.current) {
       Speech.stop();
+      handleSpeechDone();
     }
   }, [isConversationRef.current]);
 
   useEffect(() => {
-    if (messageHistoryAI.length <= 1) return;
+    if (messageHistoryAI.length === 0) {
+      console.log("Nothing to read, ending speech");
+      handleSpeechDone();
+
+      return;
+    }
 
     // Condition to start speaking
     if (
-      props.isConversation &&
+      isConversationRef.current &&
       !isListeningRef.current &&
       !props.waitingForResponse &&
       messageHistoryAI[messageHistoryAI.length - 1].role === "assistant" &&
       isSpeakingRef.current
     ) {
+      console.log("conditional passed");
       // Start speaking
       // TODO: ADD MISSING VOICE HANDLES
       Speech.speak(messageHistoryAI[messageHistoryAI.length - 1].content, {

@@ -1,11 +1,9 @@
-import React, { useEffect, useRef } from "react"; // , { Dispatch, useState, useEffect, SetStateAction } from "react";
-import { View, LogBox } from "react-native";
+import React from "react";
+import { View } from "react-native";
 import Voice from "@react-native-voice/voice";
 import { useChatContext } from "../../contexts/ChatContext";
 
-LogBox.ignoreLogs(["new NativeEventEmitter"]);
-
-function SpeechRecognition() {
+export function SpeechRecognition() {
   const {
     messages,
     setMessages,
@@ -39,7 +37,6 @@ function SpeechRecognition() {
   // const [isListening, setIsListening] = useState(false);
   const [recognizedText, setRecognizedText] = React.useState("");
   const [partialText, setPartialText] = React.useState("");
-  const noSpeechTimeoutRef = useRef(null);
 
   const handleRecognizedText = async (recognizedText: string) => {
     // console.log(recognizedText);
@@ -70,7 +67,6 @@ function SpeechRecognition() {
     console.log("Speech results.");
     if (e.value && e.value.length > 0) {
       const recognizedText = e.value[0];
-      clearNoSpeechTimeout();
       handleRecognizedText(recognizedText);
     }
   };
@@ -80,51 +76,53 @@ function SpeechRecognition() {
     if (error && error.error.message === "7/No match") {
       setIsConversation(false);
       isConversationRef.current = false;
+    } else {
+      console.log("TODO, check if text regonized, if not end conversation");
     }
   };
 
-  const onSpeechPartialResults = (e: any) => {
-    console.log("Partial speech results.", e.value);
-    if (e.value && e.value.length > 0) {
-      setPartialText(e.value[0]); // Update partial text state
-    }
-  };
-
+  // const onSpeechPartialResults = (e: any) => {
+  //   // console.log("Partial speech results.");
+  //   if (e.value && e.value.length > 0) {
+  //     setPartialText(e.value[0]); // Update partial text state
+  //     onPartialResult(e.value[0]);
+  //   }
+  // };
   const onSpeechVolumeChanged = (e: any) => {
     setMicLevel(e.value);
     // console.log("Speech volume changed:", e);
   };
 
-  const onSpeechStart = (e: any) => {
-    console.log("onSpeechStart: ", e);
-    setNoSpeechTimeout();
-  };
+  // const onSpeechStart = (e: any) => {
+  //   console.log("onSpeechStart: ", e);
+  // };
+  const onSpeechEnd = (e: any) => {
+    console.log("onSpeechEnd: ", e, " recognizedText:", recognizedText);
 
-  const handleNoSpeechDetected = () => {
-    console.log("No speech detected within the expected timeframe.");
-    setIsConversation(false);
-    isConversationRef.current = false;
+    setMicLevel(-5);
     setIsListening(false);
     isListeningRef.current = false;
-  };
 
-  const setNoSpeechTimeout = () => {
-    clearNoSpeechTimeout(); // Clear any existing timeout
-    noSpeechTimeoutRef.current = setTimeout(handleNoSpeechDetected, 5000); // 5-second timeout
+    // if (recognizedText.length === 0) {
+    //   console.log("no speech recognition, end conversation");
+    //   setIsConversation(false);
+    //   isConversationRef.current = false;
+    //   setIsSpeaking(false);
+    //   isSpeakingRef.current = false;
+    // }
   };
-
-  const clearNoSpeechTimeout = () => {
-    if (noSpeechTimeoutRef.current) {
-      clearTimeout(noSpeechTimeoutRef.current);
-      noSpeechTimeoutRef.current = null;
-    }
+  const onSpeechStart = (e: any) => {
+    setRecognizedText("");
   };
 
   React.useEffect(() => {
     Voice.onSpeechResults = onSpeechResults;
+    // Voice.onSpeechPartialResults = onSpeechPartialResults;
     Voice.onSpeechError = onSpeechError;
-    Voice.onSpeechStart = onSpeechStart;
+    // Voice.onSpeechStart = onSpeechStart;
+    Voice.onSpeechEnd = onSpeechEnd;
     Voice.onSpeechVolumeChanged = onSpeechVolumeChanged;
+    Voice.onSpeechStart = onSpeechStart;
 
     return () => {
       Voice.destroy().then(Voice.removeAllListeners);
@@ -146,7 +144,7 @@ function SpeechRecognition() {
     Voice.onSpeechResults = onSpeechResults;
     Voice.onSpeechVolumeChanged = onSpeechVolumeChanged;
     Voice.onSpeechError = onSpeechError;
-    Voice.onSpeechStart = onSpeechStart;
+    Voice.onSpeechEnd = onSpeechEnd;
 
     if (await Voice.isAvailable()) {
       console.log("voice available: true");
@@ -169,5 +167,3 @@ function SpeechRecognition() {
 
   return <View></View>;
 }
-
-export default SpeechRecognition;

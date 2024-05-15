@@ -11,8 +11,8 @@ import { GiftedChat } from "react-native-gifted-chat";
 
 // import UserModal from "../components/UserModal";
 
-import AnimatedMessage from "../components/AnimatedMessage";
-import TypingIndicator from "../components/TypingIndicator";
+import AnimatedMessage from "../components/ChatScreen/AnimatedMessage";
+import TypingIndicator from "../components/ChatScreen/TypingIndicator";
 
 import { MaterialIcons } from "@expo/vector-icons";
 
@@ -24,13 +24,14 @@ import {
   renderFooter,
   renderSend,
   customInputToolbar,
-} from "../components/ChatUIComponents";
+} from "../components/ChatScreen/ChatUIComponents";
+// import VoiceTest from "../components/conversation/VoiceTest";
 
 LogBox.ignoreLogs(["new NativeEventEmitter"]);
 
 import { useChatContext } from "../contexts/ChatContext";
 
-import ConvoStarters from "../components/ConvoStarters";
+import ConvoStarters from "../components/ChatScreen/ConvoStarters";
 
 // TODO iOS FireBase Integration
 // TODO waiting for response API timeout
@@ -122,6 +123,7 @@ export default function ChatScreen() {
           // contentContainerStyle={{ paddingBottom: 600 }}
         />
         <ConvoStarters />
+        {/* <VoiceTest /> */}
         {/* <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={50}

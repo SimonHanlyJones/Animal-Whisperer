@@ -1,6 +1,6 @@
 import { View, TouchableOpacity, Text } from "react-native";
-import { useChatContext } from "../contexts/ChatContext";
-import { styles } from "../styles/styles";
+import { useChatContext } from "../../contexts/ChatContext";
+import { styles } from "../../styles/styles";
 import React from "react";
 
 export default function ConvoStarters() {

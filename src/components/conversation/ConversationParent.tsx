@@ -3,10 +3,12 @@ import { useCallback, useEffect, useState } from "react";
 import { useChatContext } from "../../contexts/ChatContext";
 import { styles } from "../../styles/styles";
 
+// import SpeechRecognition from "./SpeechRecognitionEXAMPLE";
 import SpeechRecognition from "./SpeechRecognition";
 import VoiceSynthesis from "./VoiceSynthesis";
-import ConvModal from "./ConvModal";
-// import * as Haptics from "expo-haptics";
+import ConvModal from "./ConvoModal/ConvModal";
+import * as Haptics from "expo-haptics";
+import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 
 import React from "react";
 
@@ -37,6 +39,8 @@ function ConversationParent() {
     messageHistoryAI,
     setMessageHistoryAI,
     lastMessageRef,
+    micLevel,
+    setMicLevel,
   } = useChatContext();
 
   const [conversationModalVisible, setConversationModalVisible] =
@@ -47,13 +51,27 @@ function ConversationParent() {
   useEffect(() => {
     isConversationRef.current = isConversation;
     if (!isConversation) {
+      deactivateKeepAwake();
       setIsListening(false);
       setIsSpeaking(false);
+      isSpeakingRef.current = false;
+      isListeningRef.current = false;
     }
     if (isConversation) {
+      activateKeepAwakeAsync();
       setIsListening(true);
       setConversationModalVisible(true);
     }
+    console.log(
+      "converstaion changes made",
+      isConversation,
+      "ref",
+      isConversationRef.current,
+      "isListening",
+      isListening,
+      "isSpeaking",
+      isSpeaking
+    );
   }, [isConversation]);
 
   useEffect(() => {
@@ -61,70 +79,42 @@ function ConversationParent() {
   }, [isSpeaking]);
 
   useEffect(() => {
-    // Only trigger haptics if the state changes to true
-    // if (isListening !== isListeningRef.current && isListening) {
-    //   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    // }
+    if (isListening !== isListeningRef.current && isListening) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    }
+    if (isListening !== isListeningRef.current && !isListening) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    }
     isListeningRef.current = isListening;
   }, [isListening]);
 
   const handleCloseConversationModal = () => {
     setConversationModalVisible(false);
     setIsConversation(false);
+    isConversationRef.current = false;
   };
 
-  const handleVoiceResult = useCallback(
-    (text: string) => {
-      if (isConversation && text.length > 0) {
-        onSend([
-          {
-            _id: Math.random().toString(),
-            text: text,
-            createdAt: new Date(),
-            user: {
-              _id: 1,
-            },
-          },
-        ]);
-        setIsSpeaking(true);
-        isSpeakingRef.current = true;
-      }
-      console.log("Voice recognition result:", text);
-    },
-    [isConversation]
-  );
+  // const [partialText, setPartialText] = useState("");
 
-  const [partialText, setPartialText] = useState("");
+  // const handlePartialResult = (text: string) => {
+  //   setPartialText(text); // Update state with partial result
+  //   // console.log("Partial voice recognition result:", text); // Log partial result
+  // };
 
-  const handlePartialResult = (text: string) => {
-    setPartialText(text); // Update state with partial result
-    // console.log("Partial voice recognition result:", text); // Log partial result
-  };
-
-  const handleVoiceError = (error: any) => {
-    setIsConversation(false);
-  };
-
-  const toggleListening = () => {
-    console.log("triggering");
-    setIsListening(!isListening); // Toggle the listening state
-    if (!isListening) {
-      console.log("Starting voice recognition...");
-      console.log("Partial Text:", partialText); // Log existing partial text if any
-    } else {
-      console.log("Stopping voice recognition...");
-    }
-  };
+  // const toggleListening = () => {
+  //   console.log("triggering");
+  //   setIsListening(!isListening); // Toggle the listening state
+  //   if (!isListening) {
+  //     console.log("Starting voice recognition...");
+  //     console.log("Partial Text:", partialText); // Log existing partial text if any
+  //   } else {
+  //     console.log("Stopping voice recognition...");
+  //   }
+  // };
 
   return (
     <View>
-      <SpeechRecognition
-        isListening={isListening}
-        setIsListening={setIsListening}
-        onResult={handleVoiceResult}
-        onPartialResult={handlePartialResult}
-        onError={handleVoiceError}
-      />
+      <SpeechRecognition />
       <VoiceSynthesis
         isConversation={isConversation}
         waitingForResponse={waitingForResponse}
@@ -142,6 +132,7 @@ function ConversationParent() {
         setIsConversation={setIsConversation}
         isConversation={isConversation}
         isConversationRef={isConversationRef}
+        micLevel={micLevel}
       />
     </View>
   );
