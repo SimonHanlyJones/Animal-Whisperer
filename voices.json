@@ -1,0 +1,58 @@
+ [
+    {
+      identifier: "en-au-x-aub-network",
+      language: "en-AU",
+      name: "en-au-x-aub-network",
+      quality: "Enhanced",
+    },
+    {
+      identifier: "en-au-x-auc-local",
+      language: "en-AU",
+      name: "en-au-x-auc-local",
+      quality: "Enhanced",
+    },
+    {
+      identifier: "en-au-x-aud-network",
+      language: "en-AU",
+      name: "en-au-x-aud-network",
+      quality: "Enhanced",
+    },
+    {
+      identifier: "en-au-x-aub-local",
+      language: "en-AU",
+      name: "en-au-x-aub-local",
+      quality: "Enhanced",
+    },
+    {
+      identifier: "en-AU-language",
+      language: "en-AU",
+      name: "en-AU-language",
+      quality: "Enhanced",
+    },
+    {
+      identifier: "en-au-x-auc-network",
+      language: "en-AU",
+      name: "en-au-x-auc-network",
+      quality: "Enhanced",
+    },
+    {
+      identifier: "en-au-x-aua-network",
+      language: "en-AU",
+      name: "en-au-x-aua-network",
+      quality: "Enhanced",
+    },
+    {
+      identifier: "en-au-x-aua-local",
+      language: "en-AU",
+      name: "en-au-x-aua-local",
+      quality: "Enhanced",
+    },
+    {
+      identifier: "en-au-x-aud-local",
+      language: "en-AU",
+      name: "en-au-x-aud-local",
+      quality: "Enhanced",
+    },
+  ];
+  //   en-au-x-aud-local
+  // en-au-x-aub-local
