@@ -84,8 +84,9 @@ function SpeechRecognition() {
   };
 
   const onSpeechPartialResults = (e: any) => {
-    console.log("Partial speech results.", e.value);
+    // console.log("Partial speech results.", e.value);
     if (e.value && e.value.length > 0) {
+      clearNoSpeechTimeout();
       setPartialText(e.value[0]); // Update partial text state
     }
   };
@@ -125,6 +126,7 @@ function SpeechRecognition() {
     Voice.onSpeechError = onSpeechError;
     Voice.onSpeechStart = onSpeechStart;
     Voice.onSpeechVolumeChanged = onSpeechVolumeChanged;
+    Voice.onSpeechPartialResults = onSpeechPartialResults;
 
     return () => {
       Voice.destroy().then(Voice.removeAllListeners);
@@ -142,11 +144,11 @@ function SpeechRecognition() {
   }, [isListening]);
 
   async function startListening() {
-    // TODO check available
     Voice.onSpeechResults = onSpeechResults;
     Voice.onSpeechVolumeChanged = onSpeechVolumeChanged;
     Voice.onSpeechError = onSpeechError;
     Voice.onSpeechStart = onSpeechStart;
+    Voice.onSpeechPartialResults = onSpeechPartialResults;
 
     if (await Voice.isAvailable()) {
       console.log("voice available: true");

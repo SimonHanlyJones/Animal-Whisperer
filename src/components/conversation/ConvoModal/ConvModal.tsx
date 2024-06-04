@@ -12,6 +12,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { styles } from "../../../styles/styles";
 import { useChatContext } from "../../../contexts/ChatContext";
+// import Waveform from "./Waveform";
 const ConvModal = ({ isVisible, onClose }) => {
   const {
     messages,
@@ -128,6 +129,14 @@ const ConvModal = ({ isVisible, onClose }) => {
                   ? "Press the phone to start chatting mate"
                   : ""}
               </Text>
+              {/* <View style={localStyles.micContainer}>
+                <MaterialIcons
+                  name="mic"
+                  size={50}
+                  color={isListening ? "white" : "gray"}
+                />
+                {isListening && <Waveform micLevel={micLevel} />}
+              </View> */}
               <TouchableOpacity
                 style={styles.conversationButton}
                 onPress={() => setIsConversation(!isConversation)}
@@ -138,6 +147,11 @@ const ConvModal = ({ isVisible, onClose }) => {
                   color="#FFF"
                   style={styles.iconStyle}
                 />
+                {/* <Waveform
+                  micLevel={micLevel}
+                  isListening={isListening}
+                  numBars={5}
+                /> */}
               </TouchableOpacity>
             </View>
           </TouchableWithoutFeedback>
@@ -152,6 +166,15 @@ const localStyles = StyleSheet.create({
     height: 30, // Adjust the height as needed to fit your text
     justifyContent: "center", // Center the text vertically
     alignItems: "center", // Center the text horizontally
+  },
+  micContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  micLevelText: {
+    fontSize: 20,
+    marginLeft: 10,
+    color: "black",
   },
 });
 
